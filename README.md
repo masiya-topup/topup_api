@@ -655,28 +655,74 @@ $ wget http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-linux-x64.r
 $ mv jdk-7u79-linux-x64.rpm\?AuthParam\=1437243125_07c1ad264df66e4c8b11d6698cc64f0d jdk-7u79-linux-x64.rpm
 $ rpm -Uvh jdk-7u79-linux-x64.rpm
 $ nano /etc/profile.d/jdk.sh
+#!/bin/bash
+JAVA_HOME=/usr/java/jdk1.7.0_79
+JRE_HOME=/usr/java/jdk1.7.0_79/jre
+PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+export PATH JAVA_HOME
+export PATH JRE_HOME
+export CLASSPATH=.
 $ chmod +x /etc/profile.d/jdk.sh
 $ source /etc/profile.d/jdk.sh
 $ wget http://www.interior-dsgn.com/apache/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz
 $ mv apache-maven-3.3.3 /usr/maven
 $ ln -s /usr/maven/bin/mvn /usr/bin/mvn
 $ nano /etc/profile.d/maven.sh
+#!/bin/bash
+MAVEN_HOME=/usr/maven
+PATH=$MAVEN_HOME/bin:$PATH
+export PATH MAVEN_HOME
+export CLASSPATH=.
 $ chmod +x /etc/profile.d/maven.sh
 $ source /etc/profile.d/maven.sh
 $ wget http://mirror.olnevhost.net/pub/apache/tomcat/tomcat-7/v7.0.63/bin/apache-tomcat-7.0.63.tar.gz
 $ tar -xzf apache-tomcat-7.0.63.tar.gz
 $ mv apache-tomcat-7.0.63 /usr/local/tomcat7
 $ nano /etc/profile.d/tomcat.sh
+#!/bin/bash
+CATALINA_HOME=/usr/local/tomcat7
+PATH=$CATALINA_HOME/bin:$PATH
+export PATH CATALINA_HOME
+export CLASSPATH=.
 $ chmod +x /etc/profile.d/tomcat.sh
 $ source /etc/profile.d/tomcat.sh
 $ chmod +x $CATALINA_HOME/bin/startup.sh
 $ chmod +x $CATALINA_HOME/bin/shutdown.sh
 $ chmod +x $CATALINA_HOME/bin/catalina.sh
 $ nano /etc/init.d/tomcat
+#!/bin/sh
+# chkconfig: 2345 80 20
+
+# Description: Tomcat Start/Shutdown script
+
+export JAVA_HOME=/usr/java/jdk1.7.0_79
+
+case $1 in
+start)
+cd /usr/local/tomcat7/bin/
+./startup.sh
+;;
+stop)
+cd /usr/local/tomcat7/bin/
+./shutdown.sh
+;;
+restart)
+cd /usr/local/tomcat7/bin/
+./shutdown.sh
+cd /usr/local/tomcat7/bin/
+./startup.sh
+;;
+esac
+exit 0
 $ chmod a+x /etc/init.d/tomcat
 $ chkconfig --add tomcat
 $ service tomcat start
 $ chkconfig tomcat on
+```
+* Setup Sendmail
+```sh
+$ yum install sendmail
+$ service sendmail restart
 ```
 
 ## Deployment setup
