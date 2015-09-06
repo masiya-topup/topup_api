@@ -12,7 +12,7 @@ $ mysql -h localhost -u root
 mysql> SET PASSWORD FOR root@localhost = PASSWORD('admin');
 $ mysql -h localhost -u root -padmin
 ```
-SQL Setup
+* SQL Setup : 'topup' database need to created
 ```sql
 --
 -- Database: `topup`
@@ -744,7 +744,10 @@ $ rm -Rvf /usr/local/tomcat7/webapps/topup
 $ service tomcat start
 $ cd ~/
 ```
-
+* Log location
+  * `/usr/local/tomcat7/logs/catalina.out`
+  * `/usr/local/tomcat7/bin/logs/topup.log`
+  * `/var/log/maillog`
 ## Eclipse setup
 * Import Maven Project
 * Window -> Show View -> Other -> General -> Navigator
