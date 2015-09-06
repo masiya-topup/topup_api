@@ -1,59 +1,5 @@
 # Topup Project
 
-## Eclipse setup
-* Import Maven Project
-* Window -> Show View -> Other -> General -> Navigator
-  * .settings -> org.eclipse.wst.common.project.facet.core.xml (java = 1.7, jst.web = 3.0)
-* Preferences -> Java -> Installed JREs -> 1.7
-* Project -> Properties -> Java Build Path -> Libraries (Remove JRE 1.5 or 1.6)
-* Project -> Properties -> Targeted Runtimes -> Apache Tomcat 7.0
-* Project -> Properties -> Java Compiler -> Compiler Compliance Level 1.7
-* Project -> Properties -> Project Facets -> Java (1.7)
-* POM.xml should have maven build plugin source & target to 1.7
-* Project -> Maven -> Update Project...
-
-## Eclipse run/debug configuration
-* Project -> Run As... -> Run Configurations -> Maven (RMB) -> New...
-  * Main Tab
-    * Name: mvnTopup
-    * Base Directory: ${workspace_loc:/topup}
-    * Goals: tomcat:run
-  * Source Tab
-    * Add -> Workspace
-
-## Command line
-* `$ mvn clean install`
-* `$ mvn package` 
-* `$ mvn tomcat:run` or `$ mvnDebug tomcat:run`
-
-# Topup Project
-
-## Eclipse setup
-* Import Maven Project
-* Window -> Show View -> Other -> General -> Navigator
-  * .settings -> org.eclipse.wst.common.project.facet.core.xml (java = 1.7, jst.web = 3.0)
-* Preferences -> Java -> Installed JREs -> 1.7
-* Project -> Properties -> Java Build Path -> Libraries (Remove JRE 1.5 or 1.6)
-* Project -> Properties -> Targeted Runtimes -> Apache Tomcat 7.0
-* Project -> Properties -> Java Compiler -> Compiler Compliance Level 1.7
-* Project -> Properties -> Project Facets -> Java (1.7)
-* POM.xml should have maven build plugin source & target to 1.7
-* Project -> Maven -> Update Project...
-
-## Eclipse run/debug configuration
-* Project -> Run As... -> Run Configurations -> Maven (RMB) -> New...
-  * Main Tab
-    * Name: mvnTopup
-    * Base Directory: ${workspace_loc:/topup}
-    * Goals: tomcat:run
-  * Source Tab
-    * Add -> Workspace
-
-## Command line
-* `$ mvn clean install`
-* `$ mvn package` 
-* `$ mvn tomcat:run` or `$ mvnDebug tomcat:run`
-
 ## Database setup
 * MySQL server with credentials (root/admin)
 ```sh
@@ -732,3 +678,29 @@ $ chkconfig --add tomcat
 $ service tomcat start
 $ chkconfig tomcat on
 ```
+
+## Eclipse setup
+* Import Maven Project
+* Window -> Show View -> Other -> General -> Navigator
+  * .settings -> org.eclipse.wst.common.project.facet.core.xml (java = 1.7, jst.web = 3.0)
+* Preferences -> Java -> Installed JREs -> 1.7
+* Project -> Properties -> Java Build Path -> Libraries (Remove JRE 1.5 or 1.6)
+* Project -> Properties -> Targeted Runtimes -> Apache Tomcat 7.0
+* Project -> Properties -> Java Compiler -> Compiler Compliance Level 1.7
+* Project -> Properties -> Project Facets -> Java (1.7)
+* POM.xml should have maven build plugin source & target to 1.7
+* Project -> Maven -> Update Project...
+
+## Eclipse run/debug configuration
+* Project -> Run As... -> Run Configurations -> Maven (RMB) -> New...
+  * Main Tab
+    * Name: mvnTopup
+    * Base Directory: ${workspace_loc:/topup}
+    * Goals: tomcat:run
+  * Source Tab
+    * Add -> Workspace
+
+## Command line
+* `$ mvn clean install`
+* `$ mvn package` 
+* `$ mvn tomcat:run` or `$ mvnDebug tomcat:run`
