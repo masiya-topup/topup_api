@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.masiya.topup.mapper.UserAuthMapper">
+	<select id="getAll" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUserAuth">
+		SELECT usr.*, ua.*
+		FROM UserAuth ua
+		INNER JOIN User usr ON usr.UserId_int = ua.UserId_int
+	</select>
+	<select id="getById" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUserAuth">
+		SELECT usr.*, ua.*
+		FROM UserAuth ua
+		INNER JOIN User usr ON usr.UserId_int = ua.UserId_int
+		WHERE ua.UserId_int=#{id}
+		ORDER BY ua.UserAuthDate_dt DESC LIMIT 1
+	</select>
+	
+	<select id="getByLoginPwd" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUserAuth">
+		SELECT ua.UserAuthId_int,ua.UserAuthToken_vchr,ua.UserAuthDate_dt,ua.UserAuthStatus_bit,usr.*,cntry.*
+		FROM User usr
+		LEFT JOIN UserAuth ua ON ua.UserId_int = usr.UserId_int
+		INNER JOIN Country cntry ON cntry.CountryId_int = usr.CountryId_int
+		WHERE usr.UserLogin_vchr = #{login} AND usr.UserPasswordSHA256_vchr = SHA2(#{pwd}, 256)
+		ORDER BY ua.UserAuthDate_dt DESC LIMIT 1
+	</select>
+	<select id="getByToken" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUserAuth">
+		SELECT ua.*,usr.*,cntry.*
+		FROM User usr
+		INNER JOIN UserAuth ua ON ua.UserId_int = usr.UserId_int
+		INNER JOIN Country cntry ON cntry.CountryId_int = usr.CountryId_int
+		WHERE ua.UserAuthToken_vchr=#{token} AND ua.UserAuthStatus_bit=1
+	</select>
+	
+	<insert id="add" parameterType="com.masiya.topup.model.UserAuth"
+		useGeneratedKeys="true" keyProperty="userAuthId" keyColumn="UserAuthId_int">
+		INSERT INTO UserAuth
+			(`UserId_int`, `UserAuthToken_vchr`, `UserAuthStatus_bit`)
+		VALUES
+			(#{user.userId}, #{userAuthToken}, 1)
+	</insert>
+	<update id="update" parameterType="com.masiya.topup.model.UserAuth">
+		UPDATE UserAuth
+		SET `UserAuthStatus_bit`=#{userAuthStatus}
+		WHERE `UserId_int`=#{user.userId} AND `UserAuthId_int`=#{userAuthId}
+	</update>
+	<delete id="delete">
+		DELETE FROM UserAuth
+		WHERE `UserAuthId_int`=#{id}
+	</delete>
+</mapper>

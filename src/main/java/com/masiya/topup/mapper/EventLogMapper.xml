@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.masiya.topup.mapper.EventLogMapper">
+	<!-- -->
+	<select id="getAll" resultMap="com.masiya.topup.mapper.CommonMapper.resmapEventLog">
+		SELECT
+		el.*
+		, <include refid="com.masiya.topup.mapper.CommonMapper.userColumns"><property name="alias" value="usr"/></include>
+		, <include refid="com.masiya.topup.mapper.CommonMapper.userColumns"><property name="alias" value="ownr"/></include>
+		FROM EventLog el
+		LEFT JOIN User usr ON usr.UserId_int = el.UserId_int
+		LEFT JOIN User ownr ON ownr.UserId_int = el.OwnerId_int
+		<if test="search != null">
+			WHERE el.EventLogTitle_vchr LIKE #{search}
+		</if>
+		ORDER BY el.EventLogId_int DESC
+	</select>
+	<select id="getAllByType" resultMap="com.masiya.topup.mapper.CommonMapper.resmapEventLog">
+		SELECT
+		el.*
+		, <include refid="com.masiya.topup.mapper.CommonMapper.userColumns"><property name="alias" value="usr"/></include>
+		, <include refid="com.masiya.topup.mapper.CommonMapper.userColumns"><property name="alias" value="ownr"/></include>
+		FROM EventLog el
+		LEFT JOIN User usr ON usr.UserId_int = el.UserId_int
+		LEFT JOIN User ownr ON ownr.UserId_int = el.OwnerId_int
+		WHERE el.EventLogType_enm = #{type}
+		<if test="user != null">
+			AND el.OwnerId_int = #{user.userId}
+		</if>
+		ORDER BY el.EventLogId_int DESC
+	</select>
+	<select id="getAllByTypeCondition" resultMap="com.masiya.topup.mapper.CommonMapper.resmapEventLog">
+		SELECT el.*, usr.*, ownr.*
+		FROM EventLog el
+		LEFT JOIN User usr ON usr.UserId_int = el.UserId_int
+		LEFT JOIN User ownr ON ownr.UserId_int = el.OwnerId_int
+		WHERE el.EventLogType_enm = #{type}
+		<if test="user != null">
+			AND el.OwnerId_int = #{user.userId}
+		</if>
+		<if test="search != null">
+			AND el.EventLogTitle_vchr LIKE #{search}
+		</if>
+		ORDER BY el.EventLogId_int DESC
+	</select>
+	<select id="getById" resultMap="com.masiya.topup.mapper.CommonMapper.resmapEventLog">
+		SELECT el.*, usr.*, ownr.*
+		FROM EventLog el
+		LEFT JOIN User usr ON usr.UserId_int = el.UserId_int
+		LEFT JOIN User ownr ON ownr.UserId_int = el.OwnerId_int
+		WHERE el.EventLogId_int=#{id}
+	</select>
+	<insert id="add" parameterType="com.masiya.topup.model.EventLog"
+		useGeneratedKeys="true" keyProperty="eventLogId" keyColumn="EventLogId_int">
+		INSERT INTO EventLog
+			(`UserId_int`,
+			`OwnerId_int`,
+			`EventLogType_enm`,
+			`EventLogTitle_vchr`,
+			`EventLogDetails_vchr`)
+		VALUES
+			(<choose>
+			<when test="user != null and user.userId != null">
+			#{user.userId},
+			</when>
+			<otherwise>
+			NULL,
+			</otherwise>
+			</choose>
+			<choose>
+			<when test="owner != null and owner != null">
+			#{owner.userId},
+			</when>
+			<otherwise>
+			NULL,
+			</otherwise>
+			</choose>
+			#{eventLogType},
+			#{eventLogTitle},
+			#{eventLogDetails});
+	</insert>
+	<update id="update" parameterType="com.masiya.topup.model.EventLog">
+		UPDATE EventLog
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="user != null">UserId_int=#{user.userId},</if>
+			<if test="owner != null">OwnerId_int=#{owner.userId},</if>
+			<if test="eventLogType != null">EventLogType_enm=#{eventLogType},</if>
+			<if test="eventLogTitle != null">EventLogTitle_vchr=#{eventLogTitle},</if>
+			<if test="eventLogDetails != null">EventLogDetails_vchr=#{eventLogDetails}</if>
+		</trim>
+		WHERE `EventLogId_int` = #{eventLogId}
+	</update>
+	<delete id="delete">
+		DELETE FROM EventLog
+		WHERE `EventLogId_int` = #{id}
+	</delete>
+	<!-- -->
+</mapper>

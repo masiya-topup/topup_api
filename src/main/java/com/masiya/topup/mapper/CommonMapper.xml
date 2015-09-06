@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.masiya.topup.mapper.CommonMapper">
+	<sql id="userColumns">
+		${alias}.UserId_int ${alias}_UserId_int
+		, ${alias}.UserLogin_vchr ${alias}_UserLogin_vchr
+		, ${alias}.UserFirstName_vchr ${alias}_UserFirstName_vchr
+		, ${alias}.UserLastName_vchr ${alias}_UserLastName_vchr
+		, ${alias}.UserEMail_vchr ${alias}_UserEMail_vchr
+		, ${alias}.UserGender_enm ${alias}_UserGender_enm
+		, ${alias}.UserRole_enm ${alias}_UserRole_enm
+		, ${alias}.UserBirthDate_dt ${alias}_UserBirthDate_dt
+		, ${alias}.UserRegistrationDate_dt ${alias}_UserRegistrationDate_dt
+		, ${alias}.UserAddress_vchr ${alias}_UserAddress_vchr
+		, ${alias}.UserStatus_bit ${alias}_UserStatus_bit
+	</sql>
+	<resultMap id="resmapUser" type="User">
+		<id property="userId" column="UserId_int" />
+		<result property="userLogin" column="UserLogin_vchr" />
+		<result property="userPassword" column="UserPassword_vchr" />
+		<result property="userPwdSHA256" column="UserPasswordSHA256_vchr" />
+		<result property="userFirstName" column="UserFirstName_vchr" />
+		<result property="userLastName" column="UserLastName_vchr" />
+		<result property="userEmail" column="UserEMail_vchr" />
+		<result property="userGender" column="UserGender_enm" />
+		<result property="userRole" column="UserRole_enm" />
+		<result property="userBirthDate" column="UserBirthDate_dt" />
+		<result property="userRegDate" column="UserRegistrationDate_dt" />
+		<result property="userAddress" column="UserAddress_vchr" />
+		<result property="userStatus" column="UserStatus_bit" />
+		<association property="country" resultMap="resmapCountryLite" />
+	</resultMap>
+	<resultMap id="resmapUserLite" type="User">
+		<id property="userId" column="UserId_int" />
+		<result property="userLogin" column="UserLogin_vchr" />
+		<result property="userFirstName" column="UserFirstName_vchr" />
+		<result property="userLastName" column="UserLastName_vchr" />
+		<result property="userEmail" column="UserEMail_vchr" />
+		<result property="userGender" column="UserGender_enm" />
+		<result property="userRole" column="UserRole_enm" />
+		<result property="userBirthDate" column="UserBirthDate_dt" />
+		<result property="userRegDate" column="UserRegistrationDate_dt" />
+		<result property="userAddress" column="UserAddress_vchr" />
+		<result property="userStatus" column="UserStatus_bit" />
+	</resultMap>
+		
+	<resultMap id="resmapUserAuth" type="UserAuth">
+		<id property="userAuthId" column="UserAuthId_int" />
+		<result property="userToken" column="UserToken_vchr" />
+		<result property="userAuthDate" column="UserAuthDate_dt" />
+		<result property="userAuthStatus" column="UserAuthStatus_bit" />
+		<association property="user" resultMap="resmapUserLite" />
+	</resultMap>
+	
+	<resultMap id="resmapUserPhone" type="UserPhone">
+		<id property="userPhoneId" column="UserPhoneId_int" />
+		<result property="userPhoneNo" column="UserPhoneNo_vchr" />
+		<result property="userPhoneType" column="UserPhoneType_enm" />
+		<result property="userPhoneDate" column="UserPhoneDate_dt" />
+		<association property="user" resultMap="resmapUserLite" />
+	</resultMap>
+	<resultMap id="resmapUserPhoneLite" type="UserPhone">
+		<id property="userPhoneId" column="UserPhoneId_int" />
+		<result property="userPhoneNo" column="UserPhoneNo_vchr" />
+		<result property="userPhoneType" column="UserPhoneType_enm" />
+		<result property="userPhoneDate" column="UserPhoneDate_dt" />
+	</resultMap>
+	
+	<resultMap id="resmapCountry" type="Country">
+		<id property="countryId" column="CountryId_int" />
+		<result property="countryCode" column="CountryCode_chr" />
+		<result property="countryName" column="CountryName_vchr" />
+		<result property="currencyCode" column="CurrencyCode_chr" />
+		<result property="capital" column="Capital_vchr" />
+		<result property="continent" column="Continent_chr" />
+		<result property="area" column="Area_vchr" />
+		<result property="language" column="Languages_vchr" />
+	</resultMap>
+	<resultMap id="resmapCountryLite" type="Country">
+		<id property="countryId" column="CountryId_int" />
+		<result property="countryCode" column="CountryCode_chr" />
+		<result property="countryName" column="CountryName_vchr" />
+	</resultMap>
+	
+	<resultMap id="resmapCompany" type="Company">
+		<id property="companyId" column="CompanyId_int" />
+		<result property="companyName" column="CompanyName_vchr" />
+		<result property="companyDesc" column="CompanyDesc_vchr" />
+		<result property="companyDate" column="CompanyDate_dt" />
+		<association property="country" resultMap="resmapCountryLite" />
+	</resultMap>
+	<resultMap id="resmapCompanyLite" type="Company">
+		<id property="companyId" column="CompanyId_int" />
+		<result property="companyName" column="CompanyName_vchr" />
+		<result property="companyDesc" column="CompanyDesc_vchr" />
+		<result property="companyDate" column="CompanyDate_dt" />
+	</resultMap>
+	
+	<resultMap id="resmapCategory" type="Category">
+		<id property="categoryId" column="CategoryId_int" />
+		<result property="categoryName" column="CategoryName_vchr" />
+		<result property="categoryDesc" column="CategoryDesc_vchr" />
+		<result property="categoryDate" column="CategoryDate_dt" />
+		<association property="company" resultMap="resmapCompanyLite" />
+		<association property="country" resultMap="resmapCountryLite" />
+	</resultMap>
+	<resultMap id="resmapCategoryLite" type="Category">
+		<id property="categoryId" column="CategoryId_int" />
+		<result property="categoryName" column="CategoryName_vchr" />
+		<result property="categoryDesc" column="CategoryDesc_vchr" />
+		<result property="categoryDate" column="CategoryDate_dt" />
+	</resultMap>
+	
+	<resultMap id="resmapService" type="Service">
+		<id property="serviceId" column="ServiceId_int" />
+		<result property="serviceName" column="ServiceName_vchr" />
+		<result property="serviceDesc" column="ServiceDesc_vchr" />
+		<result property="serviceApiURL" column="APIURL_vchr" />
+		<result property="serviceDate" column="ServiceDate_dt" />
+		<association property="company" resultMap="resmapCompanyLite" />
+		<association property="category" resultMap="resmapCategoryLite" />
+	</resultMap>
+	<resultMap id="resmapServiceLite" type="Service">
+		<id property="serviceId" column="ServiceId_int" />
+		<result property="serviceName" column="ServiceName_vchr" />
+		<result property="serviceDesc" column="ServiceDesc_vchr" />
+		<result property="serviceApiURL" column="APIURL_vchr" />
+		<result property="serviceDate" column="ServiceDate_dt" />
+	</resultMap>
+	
+	<resultMap id="resmapTransaction" type="Transaction">
+		<id property="transactionId" column="TransactionId_int" />
+		<result property="transactionType" column="TransactionType_enm" />
+		<result property="transactionSystem" column="TransactionSystem_enm" />
+		<result property="transactionAmount" column="TransactionAmount_dbl" />
+		<result property="transactionRefId" column="TransactionRefId_vchr" />
+		<result property="transactionTrackId" column="TransactionTrackId_vchr" />
+		<result property="transactionPaymentId" column="TransactionPaymentId_vchr" />
+		<result property="transactionDate" column="TransactionDate_dt" />
+		<result property="transactionStatus" column="TransactionStatus_enm" />
+		<result property="userEmail" column="UserEMail_vchr" />
+		<association property="company" column="CompanyId_int" resultMap="resmapCompanyLite" />
+		<association property="category" column="CategoryId_int" resultMap="resmapCategoryLite" />
+		<association property="service" column="ServiceId_int" resultMap="resmapServiceLite" />
+		<association property="user" column="UserId_int" resultMap="resmapUserLite" />
+		<association property="phone" column="UserPhoneId_int" resultMap="resmapUserPhoneLite" />
+	</resultMap>
+	
+	<resultMap id="resmapTicket" type="Ticket">
+		<id property="ticketId" column="TicketId_int" />
+		<result property="ticketTitle" column="TicketTitle_vchr" />
+		<result property="ticketDesc" column="TicketDesc_vchr" />
+		<result property="ticketOpenDate" column="TicketOpenDate_dt" />
+		<result property="ticketCloseDate" column="TicketCloseDate_dt" />
+		<result property="ticketStatus" column="TicketStatus_enm" />
+		<association property="user" columnPrefix="usr_" resultMap="resmapUserLite">
+			<id property="userId" column="usr_UserId_int" />
+			<result property="userLogin" column="usr_UserLogin_vchr" />
+			<result property="userFirstName" column="usr_UserFirstName_vchr" />
+			<result property="userLastName" column="usr_UserLastName_vchr" />
+			<result property="userEmail" column="usr_UserEMail_vchr" />
+			<result property="userGender" column="usr_UserGender_enm" />
+			<result property="userRole" column="usr_UserRole_enm" />
+			<result property="userBirthDate" column="usr_UserBirthDate_dt" />
+			<result property="userRegDate" column="usr_UserRegistrationDate_dt" />
+			<result property="userAddress" column="usr_UserAddress_vchr" />
+			<result property="userStatus" column="usr_UserStatus_bit" />
+		</association>
+		<association property="owner" columnPrefix="ownr_" resultMap="resmapUserLite">
+			<id property="userId" column="ownr_UserId_int" />
+			<result property="userLogin" column="ownr_UserLogin_vchr" />
+			<result property="userFirstName" column="ownr_UserFirstName_vchr" />
+			<result property="userLastName" column="ownr_UserLastName_vchr" />
+			<result property="userEmail" column="ownr_UserEMail_vchr" />
+			<result property="userGender" column="ownr_UserGender_enm" />
+			<result property="userRole" column="ownr_UserRole_enm" />
+			<result property="userBirthDate" column="ownr_UserBirthDate_dt" />
+			<result property="userRegDate" column="ownr_UserRegistrationDate_dt" />
+			<result property="userAddress" column="ownr_UserAddress_vchr" />
+			<result property="userStatus" column="ownr_UserStatus_bit" />
+		</association>
+	</resultMap>
+	<resultMap id="resmapTicketLite" type="Ticket">
+		<id property="ticketId" column="TicketId_int" />
+		<result property="ticketTitle" column="TicketTitle_vchr" />
+		<result property="ticketDesc" column="TicketDesc_vchr" />
+		<result property="ticketOpenDate" column="TicketOpenDate_dt" />
+		<result property="ticketCloseDate" column="TicketCloseDate_dt" />
+		<result property="ticketStatus" column="TicketStatus_enm" />
+	</resultMap>
+	
+	<resultMap id="resmapEventLog" type="EventLog">
+		<id property="eventLogId" column="EventLogId_int" />
+		<result property="eventLogType" column="EventLogType_enm" />
+		<result property="eventLogTitle" column="EventLogTitle_vchr" />
+		<result property="eventLogDetails" column="EventLogDetails_vchr" />
+		<result property="eventLogDate" column="EventLogDate_dt" />
+		<association property="user" columnPrefix="usr_" resultMap="resmapUserLite">
+			<id property="userId" column="usr_UserId_int" />
+			<result property="userLogin" column="usr_UserLogin_vchr" />
+			<result property="userFirstName" column="usr_UserFirstName_vchr" />
+			<result property="userLastName" column="usr_UserLastName_vchr" />
+			<result property="userEmail" column="usr_UserEMail_vchr" />
+			<result property="userGender" column="usr_UserGender_enm" />
+			<result property="userRole" column="usr_UserRole_enm" />
+			<result property="userBirthDate" column="usr_UserBirthDate_dt" />
+			<result property="userRegDate" column="usr_UserRegistrationDate_dt" />
+			<result property="userAddress" column="usr_UserAddress_vchr" />
+			<result property="userStatus" column="usr_UserStatus_bit" />
+		</association>
+		<association property="owner" columnPrefix="ownr_" resultMap="resmapUserLite">
+			<id property="userId" column="ownr_UserId_int" />
+			<result property="userLogin" column="ownr_UserLogin_vchr" />
+			<result property="userFirstName" column="ownr_UserFirstName_vchr" />
+			<result property="userLastName" column="ownr_UserLastName_vchr" />
+			<result property="userEmail" column="ownr_UserEMail_vchr" />
+			<result property="userGender" column="ownr_UserGender_enm" />
+			<result property="userRole" column="ownr_UserRole_enm" />
+			<result property="userBirthDate" column="ownr_UserBirthDate_dt" />
+			<result property="userRegDate" column="ownr_UserRegistrationDate_dt" />
+			<result property="userAddress" column="ownr_UserAddress_vchr" />
+			<result property="userStatus" column="ownr_UserStatus_bit" />
+		</association>
+	</resultMap>
+	<resultMap id="resmapEventLogLite" type="EventLog">
+		<id property="eventLogId" column="EventLogId_int" />
+		<result property="eventLogType" column="EventLogType_enm" />
+		<result property="eventLogTitle" column="EventLogTitle_vchr" />
+		<result property="eventLogDetails" column="EventLogDetails_vchr" />
+		<result property="eventLogDate" column="EventLogDate_dt" />
+	</resultMap>
+	
+	<resultMap id="resmapPasswordReset" type="PasswordReset">
+		<id property="passwordResetId" column="PasswordResetId_int" />
+		<result property="passwordResetHash" column="PasswordResetHash_vchr" />
+		<result property="passwordResetDate" column="PasswordResetDate_dt" />
+		<association property="user" column="UserId_int" resultMap="resmapUserLite" />
+	</resultMap>
+</mapper>

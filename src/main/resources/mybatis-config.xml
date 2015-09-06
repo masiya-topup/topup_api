@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<properties resource='jdbc.properties' />
+	<!-- Use @Alias annotations -->
+	<!-- -->
+	<typeAliases>
+		<typeAlias alias="User" type="com.masiya.topup.model.User" />
+		<typeAlias alias="UserAuth" type="com.masiya.topup.model.UserAuth" />
+		<typeAlias alias="UserPhone" type="com.masiya.topup.model.UserPhone" />
+		<typeAlias alias="Country" type="com.masiya.topup.model.Country" />
+		<typeAlias alias="Company" type="com.masiya.topup.model.Company" />
+		<typeAlias alias="Category" type="com.masiya.topup.model.Category" />
+		<typeAlias alias="Service" type="com.masiya.topup.model.Service" />
+		<typeAlias alias="Transaction" type="com.masiya.topup.model.Transaction" />
+		<typeAlias alias="Ticket" type="com.masiya.topup.model.Ticket" />
+		<typeAlias alias="EventLog" type="com.masiya.topup.model.EventLog" />
+		<typeAlias alias="PasswordReset" type="com.masiya.topup.model.PasswordReset" />
+	</typeAliases>
+	<!-- -->
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name='driver' value='${jdbc.driver}' />
+				<property name='url' value='${jdbc.url}' />
+				<property name='username' value='${jdbc.username}' />
+				<property name='password' value='${jdbc.password}' />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="com/masiya/topup/mapper/CommonMapper.xml" />
+		<mapper resource="com/masiya/topup/mapper/UserMapper.xml" />
+		<mapper resource="com/masiya/topup/mapper/UserAuthMapper.xml" />
+		<mapper resource="com/masiya/topup/mapper/UserPhoneMapper.xml" />
+		<mapper resource="com/masiya/topup/mapper/CountryMapper.xml" />
+		<mapper resource="com/masiya/topup/mapper/CompanyMapper.xml" />
+		<mapper resource="com/masiya/topup/mapper/CategoryMapper.xml" />
+		<mapper resource="com/masiya/topup/mapper/ServiceMapper.xml" />
+		<mapper resource="com/masiya/topup/mapper/TransactionMapper.xml" />
+		<mapper resource="com/masiya/topup/mapper/TicketMapper.xml" />
+		<mapper resource="com/masiya/topup/mapper/EventLogMapper.xml" />
+		<mapper resource="com/masiya/topup/mapper/PasswordResetMapper.xml" />
+	</mappers>
+</configuration>

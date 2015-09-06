@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.masiya.topup.mapper.TransactionMapper">
+	<!-- -->
+	<select id="getAll" resultMap="com.masiya.topup.mapper.CommonMapper.resmapTransaction">
+		SELECT tx.*, cmpny.*, cat.*, svc.*, up.*
+		<!-- <if test="user != null"> -->
+		, usr.*
+		<!-- </if> -->
+		FROM Transaction tx
+		INNER JOIN Company cmpny ON cmpny.CompanyId_int = tx.CompanyId_int
+		INNER JOIN Category cat ON cat.CategoryId_int = tx.CategoryId_int
+		INNER JOIN Service svc ON svc.ServiceId_int = tx.ServiceId_int
+		<!-- <if test="user != null"> -->
+		LEFT JOIN User usr ON usr.UserId_int = tx.UserId_int
+		<!-- </if> -->
+		INNER JOIN UserPhone up ON up.UserPhoneId_int = tx.UserPhoneId_int
+		<if test="search != null">
+			WHERE tx.TransactionPaymentId_vchr LIKE #{search}
+		</if>
+	</select>
+	<select id="getSearchDate" resultMap="com.masiya.topup.mapper.CommonMapper.resmapTransaction" flushCache="true" useCache="false" timeout="100000">
+		SELECT tx.*, cmpny.*, cat.*, svc.*, up.*
+		<!-- <if test="user != null"> -->
+		, usr.*
+		<!-- </if> -->
+		FROM Transaction tx
+		INNER JOIN Company cmpny ON cmpny.CompanyId_int = tx.CompanyId_int
+		INNER JOIN Category cat ON cat.CategoryId_int = tx.CategoryId_int
+		INNER JOIN Service svc ON svc.ServiceId_int = tx.ServiceId_int
+		LEFT JOIN User usr ON usr.UserId_int = tx.UserId_int
+		LEFT JOIN UserPhone up ON up.UserPhoneId_int = tx.UserPhoneId_int
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="search != null">
+				(tx.TransactionPaymentId_vchr LIKE #{search}  OR usr.UserLogin_vchr LIKE #{search})
+			</if>
+			<if test="startDate != null and endDate != null">
+				AND tx.TransactionDate_dt BETWEEN #{startDate} AND #{endDate}
+			</if>
+		</trim>
+		
+	</select>
+	<select id="getById" resultMap="com.masiya.topup.mapper.CommonMapper.resmapTransaction">
+		SELECT tx.*, cmpny.*, cat.*, svc.*, up.*
+		<!-- <if test="user != null"> -->
+		, usr.*
+		<!-- </if> -->
+		FROM Transaction tx
+		INNER JOIN Company cmpny ON cmpny.CompanyId_int = tx.CompanyId_int
+		INNER JOIN Category cat ON cat.CategoryId_int = tx.CategoryId_int
+		INNER JOIN Service svc ON svc.ServiceId_int = tx.ServiceId_int
+		<!-- <if test="user != null"> -->
+		LEFT JOIN User usr ON usr.UserId_int = tx.UserId_int
+		<!-- </if> -->
+		INNER JOIN UserPhone up ON up.UserPhoneId_int = tx.UserPhoneId_int
+		WHERE tx.TransactionId_int=#{id}
+	</select>
+	<insert id="add" parameterType="com.masiya.topup.model.Transaction"
+		useGeneratedKeys="true" keyProperty="transactionId" keyColumn="TransactionId_int">
+		INSERT INTO Transaction
+			(`CompanyId_int`,
+			`CategoryId_int`,
+			`ServiceId_int`,
+			`UserId_int`,
+			`UserPhoneId_int`,
+			`TransactionType_enm`,
+			`TransactionSystem_enm`,
+			`TransactionAmount_dbl`,
+			`TransactionRefId_vchr`,
+			`TransactionTrackId_vchr`,
+			`TransactionPaymentId_vchr`,
+			`TransactionStatus_enm`,
+			`UserEmail_vchr`)
+		VALUES
+			(#{company.companyId},
+			#{category.categoryId},
+			#{service.serviceId},
+			<choose>
+			<when test="user != null and user.userId != null">
+			#{user.userId},
+			</when>
+			<otherwise>
+			NULL,
+			</otherwise>
+			</choose>
+			#{phone.userPhoneId},
+			#{transactionType},
+			#{transactionSystem},
+			#{transactionAmount},
+			#{transactionRefId},
+			#{transactionTrackId},
+			#{transactionPaymentId},
+			#{transactionStatus},
+			#{userEmail});
+	</insert>
+	<update id="update" parameterType="com.masiya.topup.model.Transaction">
+		UPDATE Transaction
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="company != null">CompanyId_int=#{company.companyId},</if>
+			<if test="category != null">CategoryId_int=#{category.categoryId},</if>
+			<if test="service != null">ServiceId_int=#{service.serviceId},</if>
+			<if test="user != null">UserId_int=#{user.userId},</if>
+			<if test="phone != null">UserPhoneId_int=#{phone.userPhoneId},</if>
+			<if test="transactionType != null">TransactionType_enm=#{transactionType},</if>
+			<if test="transactionSystem != null">TransactionSystem_enm=#{transactionSystem},</if>
+			<if test="transactionAmount != null">TransactionAmount_dbl=#{transactionAmount},</if>
+			<if test="transactionRefId != null">TransactionRefId_vchr=#{transactionRefId},</if>
+			<if test="transactionTrackId != null">TransactionTrackId_vchr=#{transactionTrackId},</if>
+			<if test="transactionPaymentId != null">TransactionPaymentId_vchr=#{transactionPaymentId},</if>
+			<if test="transactionDate != null">TransactionDate_dt=#{transactionDate},</if>
+			<if test="transactionStatus != null">TransactionStatus_enm=#{transactionStatus}</if>
+		</trim>
+		WHERE `TransactionId_int` = #{transactionId}
+	</update>
+	<delete id="delete">
+		DELETE FROM Transaction
+		WHERE `TransactionId_int` = #{id}
+	</delete>
+	<!-- -->
+</mapper>

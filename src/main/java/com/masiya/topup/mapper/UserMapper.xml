@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.masiya.topup.mapper.UserMapper">
+	<select id="getAll" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUser">
+		SELECT usr.*, cntry.*
+		FROM User usr
+		INNER JOIN Country cntry ON cntry.CountryId_int = usr.CountryId_int
+		LEFT JOIN UserPhone up ON up.UserId_int = usr.UserId_int
+		<if test="search != null">
+			WHERE #{search}
+		</if>
+	</select>
+	<select id="getAllByRole" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUser">
+		SELECT usr.*, cntry.*
+		FROM User usr
+		INNER JOIN Country cntry ON cntry.CountryId_int = usr.CountryId_int
+		WHERE usr.UserRole_enm = #{role}
+	</select>
+	<select id="getAllByRoleCondition" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUser">
+		SELECT usr.*, cntry.*
+		FROM User usr
+		INNER JOIN Country cntry ON cntry.CountryId_int = usr.CountryId_int
+		LEFT JOIN UserPhone up ON up.UserId_int = usr.UserId_int
+		WHERE usr.UserRole_enm = #{role}
+		<if test="search != null">
+			AND (usr.UserLogin_vchr LIKE #{search} OR usr.UserEMail_vchr LIKE #{search} OR up.UserPhoneNo_vchr LIKE #{search})
+		</if>
+	</select>
+	<select id="getByEMail" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUser">
+		SELECT usr.*, cntry.*
+		FROM User usr
+		INNER JOIN Country cntry ON cntry.CountryId_int = usr.CountryId_int
+		WHERE usr.UserEMail_vchr = #{email}
+	</select>
+	<select id="getByLogin" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUser">
+		SELECT usr.*, cntry.*
+		FROM User usr
+		INNER JOIN Country cntry ON cntry.CountryId_int = usr.CountryId_int
+		WHERE usr.UserLogin_vchr = #{login}
+	</select>
+	<select id="getById" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUser">
+		SELECT usr.*, cntry.*
+		FROM User usr
+		INNER JOIN Country cntry ON cntry.CountryId_int = usr.CountryId_int
+		WHERE usr.UserId_int=#{id}
+	</select>
+	<insert id="add" parameterType="com.masiya.topup.model.User"
+		useGeneratedKeys="true" keyProperty="userId" keyColumn="UserId_int">
+		INSERT INTO User
+			(
+			`UserLogin_vchr`,
+			`UserPassword_vchr`,
+			`UserPasswordSHA256_vchr`,
+			`UserFirstName_vchr`,
+			`UserLastName_vchr`,
+			`UserEMail_vchr`,
+			`UserGender_enm`,
+			`UserRole_enm`,
+			`UserBirthDate_dt`,
+			`CountryId_int`,
+			`UserAddress_vchr`,
+			`UserStatus_bit`)
+		VALUES
+			(
+			#{userLogin},
+			#{userPassword},
+			SHA2(#{userPassword}, 256),
+			#{userFirstName},
+			#{userLastName},
+			#{userEmail},
+			#{userGender},
+			#{userRole},
+			#{userBirthDate},
+			#{country.countryId},
+			#{userAddress},
+			1)
+	</insert>
+	<update id="update" parameterType="com.masiya.topup.model.User">
+		UPDATE User
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="userLogin != null and userLogin !=''">UserLogin_vchr=#{userLogin},</if>
+			<if test="userPassword != null and userPassword !=''">UserPassword_vchr=#{userPassword},</if>
+			<if test="userPassword != null and userPassword !=''">UserPasswordSHA256_vchr=SHA2(#{userPassword}, 256),</if>
+			<if test="userFirstName != null and userFirstName !=''">UserFirstName_vchr=#{userFirstName},</if>
+			<if test="userLastName != null and userLastName !=''">UserLastName_vchr=#{userLastName},</if>
+			<if test="userEmail != null and userEmail !=''">UserEMail_vchr=#{userEmail},</if>
+			<if test="userGender != null and userGender !=''">UserGender_enm=#{userGender},</if>
+			<if test="userRole != null and userRole !=''">UserRole_enm=#{userRole},</if>
+			<if test="userBirthDate != null">UserBirthDate_dt=#{userBirthDate},</if>
+			<if test="country != null and country.countryId !=0">CountryId_int=#{country.countryId},</if>
+			<if test="userAddress != null and userAddress !=''">UserAddress_vchr=#{userAddress},</if>
+			<if test="userStatus != null">UserStatus_bit=#{userStatus}</if>
+		</trim>
+		WHERE `UserId_int` = #{userId}
+	</update>
+	<delete id="delete">
+		DELETE FROM User
+		WHERE `UserId_int` = #{id}
+	</delete>
+</mapper>

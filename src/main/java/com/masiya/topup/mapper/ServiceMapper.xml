@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.masiya.topup.mapper.ServiceMapper">
+	<!-- -->
+	<select id="getAll" resultMap="com.masiya.topup.mapper.CommonMapper.resmapService">
+		SELECT svc.*, cmpny.*, cat.*
+		FROM Service svc
+		INNER JOIN Company cmpny ON cmpny.CompanyId_int = svc.CompanyId_int
+		INNER JOIN Category cat ON cat.CategoryId_int = svc.CategoryId_int
+		<if test="search != null">
+			WHERE svc.ServiceName_vchr LIKE #{search}
+		</if>
+	</select>
+	<select id="getById" resultMap="com.masiya.topup.mapper.CommonMapper.resmapService">
+		SELECT svc.*, cmpny.*, cat.*
+		FROM Service svc
+		INNER JOIN Company cmpny ON cmpny.CompanyId_int = svc.CompanyId_int
+		INNER JOIN Category cat ON cat.CategoryId_int = svc.CategoryId_int
+		WHERE svc.ServiceId_int=#{id}
+	</select>
+	<insert id="add" parameterType="com.masiya.topup.model.Service"
+		useGeneratedKeys="true" keyProperty="serviceId" keyColumn="ServiceId_int">
+		INSERT INTO Service
+			(`ServiceName_vchr`,`ServiceDesc_vchr`,`APIURL_vchr`,`CompanyId_int`,`CategoryId_int`)
+		VALUES
+			(#{serviceName}, #{serviceDesc}, #{serviceApiURL}, #{company.companyId}, #{category.categoryId})
+	</insert>
+	<update id="update" parameterType="com.masiya.topup.model.Service">
+		UPDATE Service
+		SET
+			`ServiceName_vchr` = #{serviceName},
+			`ServiceDesc_vchr` = #{serviceDesc},
+			`APIURL_vchr` = #{serviceApiURL},
+			`CompanyId_int` = #{company.companyId},
+			`CategoryId_int` = #{category.categoryId}
+		WHERE `ServiceId_int` = #{serviceId}
+	</update>
+	<delete id="delete">
+		DELETE FROM Service
+		WHERE `ServiceId_int` = #{id}
+	</delete>
+	<!-- -->
+</mapper>

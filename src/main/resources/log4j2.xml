@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Properties>
+		<Property name="LOG_DIR">logs</Property>
+		<Property name="ARCHIVE">${LOG_DIR}/archive</Property>
+		<Property name="PATTERN">%-5level %d [%t] %c:%M(%L): %m%n</Property>
+		<Property name="PATTERN2">%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+	</Properties>
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="${PATTERN}" />
+		</Console>
+		<RollingFile name="FileWriter" fileName="${LOG_DIR}/topup.log" filePattern="${ARCHIVE}/topup.log.%d{yyyy-MM-dd-hh-mm}.gz">
+			<PatternLayout pattern="${PATTERN}" />
+			<SizeBasedTriggeringPolicy size="1 MB"/>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Root level="DEBUG">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="FileWriter" />
+		</Root>
+		<Logger name="com.masiya.topup.mapper" level="DEBUG" additivity="false">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="FileWriter" />
+		</Logger>
+		<Logger name="com.masiya.topup.manager" level="DEBUG" additivity="false">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="FileWriter" />
+		</Logger>
+	</Loggers>
+</Configuration>

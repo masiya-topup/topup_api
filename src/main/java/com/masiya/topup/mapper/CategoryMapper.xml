@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.masiya.topup.mapper.CategoryMapper">
+	<!-- -->
+	<select id="getAll" resultMap="com.masiya.topup.mapper.CommonMapper.resmapCategory">
+		SELECT cat.*, cmpny.*, cntry.*
+		FROM Category cat
+		INNER JOIN Company cmpny ON cmpny.CompanyId_int = cat.CompanyId_int
+		INNER JOIN Country cntry ON cntry.CountryId_int = cmpny.CountryId_int
+		<if test="search != null">
+			WHERE cat.CategoryName_vchr LIKE #{search}
+		</if>
+	</select>
+	<select id="getById" resultMap="com.masiya.topup.mapper.CommonMapper.resmapCategory">
+		SELECT cat.*, cmpny.*, cntry.*
+		FROM Category cat
+		INNER JOIN Company cmpny ON cmpny.CompanyId_int = cat.CompanyId_int
+		INNER JOIN Country cntry ON cntry.CountryId_int = cmpny.CountryId_int
+		WHERE cat.CategoryId_int=#{id}
+	</select>
+	<insert id="add" parameterType="com.masiya.topup.model.Category"
+		useGeneratedKeys="true" keyProperty="categoryId" keyColumn="CategoryId_int">
+		INSERT INTO Category
+			(`CategoryName_vchr`,`CategoryDesc_vchr`,`CompanyId_int`,`CountryId_int`)
+		VALUES
+			(#{categoryName}, #{categoryDesc}, #{company.companyId}, #{country.countryId})
+	</insert>
+	<update id="update" parameterType="com.masiya.topup.model.Category">
+		UPDATE Category
+		SET
+			`CategoryName_vchr` = #{categoryName},
+			`CategoryDesc_vchr` = #{categoryDesc},
+			`CompanyId_int` = #{company.companyId},
+			`CountryId_int` = #{country.countryId}
+		WHERE `CategoryId_int` = #{categoryId}
+	</update>
+	<delete id="delete">
+		DELETE FROM Category
+		WHERE `CategoryId_int` = #{id}
+	</delete>
+	<!-- -->
+</mapper>

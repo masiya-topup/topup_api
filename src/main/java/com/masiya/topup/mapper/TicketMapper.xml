@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.masiya.topup.mapper.TicketMapper">
+	<select id="getAll" resultMap="com.masiya.topup.mapper.CommonMapper.resmapTicket">
+		SELECT
+		tkt.*
+		, <include refid="com.masiya.topup.mapper.CommonMapper.userColumns"><property name="alias" value="usr"/></include>
+		, <include refid="com.masiya.topup.mapper.CommonMapper.userColumns"><property name="alias" value="ownr"/></include>
+		FROM Ticket tkt
+		INNER JOIN User usr ON usr.UserId_int = tkt.UserId_int
+		INNER JOIN User ownr ON ownr.UserId_int = tkt.OwnerId_int
+		<if test="search != null">
+			WHERE tkt.TicketTitle_vchr LIKE #{search}
+		</if>
+		ORDER BY tkt.TicketOpenDate_dt DESC
+	</select>
+	<select id="getById" resultMap="com.masiya.topup.mapper.CommonMapper.resmapTicket">
+		SELECT 
+		tkt.*
+		, <include refid="com.masiya.topup.mapper.CommonMapper.userColumns"><property name="alias" value="usr"/></include>
+		, <include refid="com.masiya.topup.mapper.CommonMapper.userColumns"><property name="alias" value="ownr"/></include>
+		FROM Ticket tkt
+		INNER JOIN User usr ON usr.UserId_int = tkt.UserId_int
+		INNER JOIN User ownr ON ownr.UserId_int = tkt.OwnerId_int
+		WHERE tkt.TicketId_int=#{id}
+		ORDER BY tkt.TicketOpenDate_dt DESC LIMIT 1
+	</select>
+
+	<insert id="add" parameterType="com.masiya.topup.model.Ticket"
+		useGeneratedKeys="true" keyProperty="ticketId" keyColumn="TicketId_int">
+		INSERT INTO Ticket
+			(`UserId_int`, `OwnerId_int`, `TicketTitle_vchr`, `TicketDesc_vchr`)
+		VALUES
+			(#{user.userId}, #{owner.userId}, #{ticketTitle}, #{ticketDesc})
+	</insert>
+	<update id="update" parameterType="com.masiya.topup.model.Ticket">
+		UPDATE Ticket
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="user != null">UserId_int=#{user.userId},</if>
+			<if test="ticketTitle != null">TicketTitle_vchr=#{ticketTitle},</if>
+			<if test="ticketDesc != null">TicketDesc_vchr=#{ticketDesc},</if>
+			<if test="ticketStatus != null and (ticketStatus == 'new' or ticketStatus == 'in-progress')">TicketCloseDate_dt=NULL,</if>
+			<if test="ticketStatus != null and (ticketStatus == 'un-resolved' or ticketStatus == 'resolved')">TicketCloseDate_dt=NOW(),</if>
+			<if test="ticketStatus != null">TicketStatus_enm=#{ticketStatus}</if>
+		</trim>
+		WHERE `UserId_int`=#{user.userId} AND `TicketId_int`=#{ticketId}
+	</update>
+	<delete id="delete">
+		DELETE FROM Ticket
+		WHERE `TicketId_int`=#{id}
+	</delete>
+</mapper>

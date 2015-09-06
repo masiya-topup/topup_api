@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.masiya.topup.mapper.UserPhoneMapper">
+	<select id="getAll" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUserPhone">
+		SELECT usr.*, up.*
+		FROM UserPhone up
+		LEFT JOIN User usr ON usr.UserId_int = up.UserId_int
+		<if test="search != null">
+			WHERE up.UserPhoneNo_vchr LIKE #{search}
+		</if>
+	</select>
+	<select id="getById" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUserPhone">
+		SELECT usr.*, up.*
+		FROM UserPhone up
+		LEFT JOIN User usr ON usr.UserId_int = up.UserId_int
+		WHERE up.UserPhoneId_int=#{id}
+	</select>
+	<select id="getByNumber" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUserPhone">
+		SELECT usr.*, up.*
+		FROM UserPhone up
+		LEFT JOIN User usr ON usr.UserId_int = up.UserId_int
+		WHERE up.UserPhoneNo_vchr=#{number}
+	</select>
+	<select id="getByPhone" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUserPhone">
+		SELECT usr.*, up.*
+		FROM UserPhone up
+		LEFT JOIN User usr ON usr.UserId_int = up.UserId_int
+		WHERE up.UserPhoneNo_vchr=#{number} AND up.UserPhoneType_enm=#{type}
+	</select>
+	
+	<select id="getAllByUser" parameterType="com.masiya.topup.model.User" resultMap="com.masiya.topup.mapper.CommonMapper.resmapUserPhone">
+		SELECT usr.*, up.*
+		FROM UserPhone up
+		INNER JOIN User usr ON usr.UserId_int = up.UserId_int
+		WHERE usr.UserId_int = #{userId}
+	</select>
+	
+	<insert id="add" parameterType="com.masiya.topup.model.UserPhone"
+		useGeneratedKeys="true" keyProperty="userPhoneId" keyColumn="UserPhoneId_int">
+		INSERT INTO UserPhone
+			(`UserId_int`, `UserPhoneNo_vchr`, `UserPhoneType_enm`)
+		VALUES
+			(
+			<choose>
+			<when test="user != null and user.userId != null">
+			#{user.userId},
+			</when>
+			<otherwise>
+			NULL,
+			</otherwise>
+			</choose>
+			#{userPhoneNo},
+			#{userPhoneType}
+			)
+	</insert>
+	<update id="update" parameterType="com.masiya.topup.model.UserPhone">
+		UPDATE UserPhone
+		SET 
+		`UserPhoneNo_vchr`=#{userPhoneNo},
+		`UserPhoneType_enm`=#{userPhoneType}
+		WHERE `UserId_int`=#{user.userId} AND `UserPhoneId_int`=#{userPhoneId}
+	</update>
+	<delete id="delete">
+		DELETE FROM UserPhone
+		WHERE `UserPhoneId_int`=#{id}
+	</delete>
+</mapper>

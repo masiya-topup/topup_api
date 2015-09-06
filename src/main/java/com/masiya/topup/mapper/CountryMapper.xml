@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.masiya.topup.mapper.CountryMapper">
+	<select id="getAll" resultMap="com.masiya.topup.mapper.CommonMapper.resmapCountry">
+		SELECT * FROM Country
+		<if test="search != null">
+			WHERE CountryName_vchr LIKE #{search}
+		</if>
+	</select>
+	<select id="getById" resultMap="com.masiya.topup.mapper.CommonMapper.resmapCountry">
+		SELECT * FROM Country WHERE CountryId_int=#{id}
+	</select>
+</mapper>
