@@ -679,6 +679,26 @@ $ service tomcat start
 $ chkconfig tomcat on
 ```
 
+## Deployment setup
+* Clone git into home directory
+```sh
+$ cd /home
+$ git clone https://github.com/masiya-topup/topup_api
+$ cd /home/topup_api
+$ mnv clean install
+```
+* Daily steps - pull, build & deploy
+```sh
+$ cd /home/topup_api
+$ git pull
+$ mvn clean install
+$ service tomcat stop
+$ cp /home/topup_api/target/topup.war /usr/local/tomcat7/webapps/
+$ rm -Rvf /usr/local/tomcat7/webapps/topup
+$ service tomcat start
+$ cd ~/
+```
+
 ## Eclipse setup
 * Import Maven Project
 * Window -> Show View -> Other -> General -> Navigator
